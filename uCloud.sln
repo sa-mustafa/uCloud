@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bps.uCloud.Tests", "Bps.uCloud.Tests\Bps.uCloud.Tests.csproj", "{BD3723EB-7948-4CBD-A87B-9308510C0F95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bps.Common", "Bps.Common\Bps.Common.csproj", "{CDC6D192-8330-40AD-97FE-328352FB91EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bps.uCloud.Contracts", "Bps.uCloud.Contracts\Bps.uCloud.Contracts.csproj", "{94322BF7-6067-4754-8A1C-61D6EEF646F6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bps.uCloud.Processor", "Bps.uCloud.Processor\Bps.uCloud.Processor.vcxproj", "{12982BFD-24DD-454C-B4E0-72FA2C297847}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bps.uCloud.API", "Bps.uCloud.API\Bps.uCloud.API.csproj", "{E981C036-E7A6-4AD9-9612-DED728BA3BFC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD3723EB-7948-4CBD-A87B-9308510C0F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD3723EB-7948-4CBD-A87B-9308510C0F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD3723EB-7948-4CBD-A87B-9308510C0F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD3723EB-7948-4CBD-A87B-9308510C0F95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDC6D192-8330-40AD-97FE-328352FB91EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDC6D192-8330-40AD-97FE-328352FB91EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDC6D192-8330-40AD-97FE-328352FB91EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDC6D192-8330-40AD-97FE-328352FB91EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94322BF7-6067-4754-8A1C-61D6EEF646F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94322BF7-6067-4754-8A1C-61D6EEF646F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94322BF7-6067-4754-8A1C-61D6EEF646F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94322BF7-6067-4754-8A1C-61D6EEF646F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12982BFD-24DD-454C-B4E0-72FA2C297847}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{12982BFD-24DD-454C-B4E0-72FA2C297847}.Debug|Any CPU.Build.0 = Debug|x64
+		{12982BFD-24DD-454C-B4E0-72FA2C297847}.Release|Any CPU.ActiveCfg = Release|x64
+		{12982BFD-24DD-454C-B4E0-72FA2C297847}.Release|Any CPU.Build.0 = Release|x64
+		{E981C036-E7A6-4AD9-9612-DED728BA3BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E981C036-E7A6-4AD9-9612-DED728BA3BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E981C036-E7A6-4AD9-9612-DED728BA3BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E981C036-E7A6-4AD9-9612-DED728BA3BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {7D9BA43D-CEA2-4A6A-A261-32088FE81D4D}
+	EndGlobalSection
+EndGlobal

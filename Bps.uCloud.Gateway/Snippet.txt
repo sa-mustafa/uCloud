@@ -1,0 +1,35 @@
+﻿// Configure the service by TopShelf library.
+HostFactory.Run(cfg =>
+{
+    cfg.EnableServiceRecovery(service =>
+    {
+        service.RestartService(1);
+        service.RestartService(1);
+        service.RestartService(1);
+        service.OnCrashOnly();
+        service.SetResetPeriod(1);
+    });
+    cfg.Service<BackendService>(callback =>
+    {
+        callback.ConstructUsing(factory => new BackendService());
+        callback.WhenStarted((factory, host) => factory.Start(host));
+        callback.WhenStopped((factory, host) => factory.Stop(host));
+    });
+    cfg.RunAsNetworkService();
+    //cfg.UseLinuxIfAvailable();
+    cfg.UseNLog();
+
+    cfg.SetDescription(AppName + " API Backend");
+    cfg.SetDescription(AppName + " API Gateway");
+    cfg.SetDisplayName(AppName);
+    cfg.SetServiceName("uCloud");
+    cfg.StartAutomaticallyDelayed();
+});
+
+
+    cfg.Service<GatewayService>(callback =>
+    {
+        callback.ConstructUsing(factory => new GatewayService());
+        callback.WhenStarted((factory, host) => factory.Start(host));
+        callback.WhenStopped((factory, host) => factory.Stop(host));
+    });

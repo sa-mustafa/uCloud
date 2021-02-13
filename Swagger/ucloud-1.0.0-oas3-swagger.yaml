@@ -1,0 +1,2753 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0-oas3
+  title: uCloud API collection
+  description: uCloud is a collection of image APIs.
+  contact:
+    email: help@bps-eng.co.ir
+  license:
+    name: MIT
+    url: 'http://www.opensource.org/licenses/MIT'
+security:
+  - implicit:
+      - 'read:face'
+      - 'write:face'
+tags:
+  - name: face
+    description: Face detection and recognition
+    externalDocs:
+      description: more
+      url: 'http://swagger.io'
+  - name: classifier
+    description: Access to image classification API
+    externalDocs:
+      description: more
+      url: 'http://swagger.io'
+  - name: image
+    description: Access to image processing API
+    externalDocs:
+      description: more
+      url: 'http://swagger.io'
+  - name: matching
+    description: Access to object matching API
+    externalDocs:
+      description: more
+      url: 'http://swagger.io'
+  - name: user
+    description: Operations about users
+    externalDocs:
+      description: Find out more about our users
+      url: 'http://swagger.io'
+paths:
+  /logo:
+    get:
+      summary: Get logo
+      description: Returns the logo image
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+  /ping:
+    get:
+      summary: Server heartbeat operation
+      description: >-
+        This operation shows how to override the global security defined above,
+        as we want to open it up for all users.
+      security: []
+      responses:
+        '200':
+          description: OK
+  /classifiers:
+    get:
+      tags:
+        - classifier
+      summary: List classifiers
+      description: Get the list of all classifiers.
+      operationId: classifierList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classifier'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classifier'
+      security:
+        - implicit:
+            - 'read:face'
+    post:
+      tags:
+        - classifier
+      summary: Create classifier
+      description: >-
+        Create a new classifier which identifies input images into known
+        classes.
+      operationId: classifierNew
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+        description: Classifier for identifying images
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '201':
+          description: successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/classifiers/{id}':
+    get:
+      tags:
+        - classifier
+      summary: View classifier
+      description: View a classifier by id.
+      operationId: classifierView
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classifier'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Classifier'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - classifier
+      summary: Update classifier with form data
+      description: Update a classifier with form data.
+      operationId: classifierUpdateForm
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Updated classifier data
+                  type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    put:
+      tags:
+        - classifier
+      summary: Update classifier
+      description: Update a classifier.
+      operationId: classifierUpdate
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Classifier'
+        description: Updated classifier data
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    delete:
+      tags:
+        - classifier
+      summary: Delete a classifier
+      description: Delete a classifier by id.
+      operationId: classifierRemove
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/classifiers/{id}/image':
+    post:
+      tags:
+        - classifier
+      summary: Add image to classifier
+      description: >-
+        Add a new image to classifier. Classifier uses these images for
+        training. Multiple images of the same object should be added for
+        enhanced results.
+      operationId: classifierImageNew
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+        - name: index
+          in: query
+          description: >-
+            Sample image index. Use multiple images with the same index and name
+            for robustness.
+          required: true
+          schema:
+            type: number
+            format: integer
+        - name: name
+          in: query
+          description: Sample image name
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Image'
+        description: Image data for feature extraction
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'read:face'
+  '/classifiers/{id}/image/{imageId}':
+    get:
+      tags:
+        - classifier
+      summary: View image info
+      description: View an image info in a classifier.
+      operationId: classifierImageView
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image index to view
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleImage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SampleImage'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - classifier
+      summary: Update image with form data
+      description: Update an image in a classifier with form data.
+      operationId: classifierImageUpdatePost
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image index to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/classifierImageUpdatePost'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    put:
+      tags:
+        - classifier
+      summary: Update image info
+      description: Update image info in a classifier.
+      operationId: classifierImageUpdate
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image index to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SampleImage'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SampleImage'
+        description: Updated image data
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    delete:
+      tags:
+        - classifier
+      summary: Delete an image
+      description: Delete an image by index.
+      operationId: classifierImageRemove
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image index to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/classifiers/{id}/train':
+    post:
+      tags:
+        - classifier
+      summary: Train a classifier
+      description: Train classifier using sample images provided to the classifier.
+      operationId: classifierTrain
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'read:face'
+  '/classifiers/{id}/identify':
+    post:
+      tags:
+        - classifier
+      summary: Identify image
+      description: Identify an image by a trained classifier.
+      operationId: classifierIdentify
+      parameters:
+        - name: id
+          in: path
+          description: Classifier id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Image'
+        description: Image data for identification
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleImage'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SampleImage'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'read:face'
+  /matchers:
+    get:
+      tags:
+        - matching
+      summary: List matchers
+      description: Get the list of all matchers.
+      operationId: matcherList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Matcher'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Matcher'
+      security:
+        - implicit:
+            - 'read:face'
+    post:
+      tags:
+        - matching
+      summary: Create matcher
+      description: >-
+        Create a new matcher which can be used to find similar models in input
+        images.
+      operationId: matcherNew
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Matcher'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Matcher'
+        description: Matcher for finding models
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '201':
+          description: successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/matchers/{id}':
+    get:
+      tags:
+        - matching
+      summary: View matcher
+      description: View a matcher by id.
+      operationId: matcherView
+      parameters:
+        - name: id
+          in: path
+          description: Matcher id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matcher'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Matcher'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - matching
+      summary: Update matcher with form data
+      description: Update a matcher with form data.
+      operationId: matcherUpdateForm
+      parameters:
+        - name: id
+          in: path
+          description: Matcher id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Updated matcher data
+                  type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    put:
+      tags:
+        - matching
+      summary: Update matcher
+      description: Update a matcher.
+      operationId: matcherUpdate
+      parameters:
+        - name: id
+          in: path
+          description: Matcher id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Matcher'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Matcher'
+        description: Updated matcher data
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    delete:
+      tags:
+        - matching
+      summary: Delete a matcher
+      description: Delete a matcher by id.
+      operationId: matcherRemove
+      parameters:
+        - name: id
+          in: path
+          description: Matcher id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/matchers/{id}/find':
+    post:
+      tags:
+        - matching
+      summary: Find model
+      description: Find model instances in an image by the matcher.
+      operationId: matcherFind
+      parameters:
+        - name: id
+          in: path
+          description: Matcher id to query
+          required: true
+          schema:
+            type: string
+        - name: min_score
+          in: query
+          description: Minimum match score
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+        - name: matches_count
+          in: query
+          description: >-
+            Maximum count of matches to return; 0 means all matches should be
+            returned.
+          schema:
+            type: integer
+            minimum: 0
+            default: 1
+        - name: max_overlap
+          in: query
+          description: Maximum overlap of the model instances.
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+        - name: subpixel
+          in: query
+          description: Specify model localization accuracy.
+          schema:
+            type: string
+            enum:
+              - none
+              - interpolation
+              - least_squares
+              - least_squares_high
+              - least_squares_very_high
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Image'
+        description: Image data for matching
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelInstance'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelInstance'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'read:face'
+  /image/barcode:
+    post:
+      tags:
+        - image
+      summary: Detect barcodes
+      description: Detect and read barcodes found in the image.
+      operationId: barcode
+      parameters:
+        - name: code_type
+          in: query
+          description: Specify the barcode type.
+          required: true
+          schema:
+            type: string
+            enum:
+              - auto
+              - 2/5 Industrial
+              - 2/5 Interleaved
+              - Codabar
+              - Code 128
+              - Code 39
+              - Code 93
+              - EAN-13 Add-On 2
+              - EAN-13 Add-On 5
+              - EAN-13
+              - EAN-8 Add-On 2
+              - EAN-8 Add-On 5
+              - EAN-8
+              - GS1 DataBar Expanded Stacked
+              - GS1 DataBar Expanded
+              - GS1 DataBar Limited
+              - GS1 DataBar Omnidir
+              - GS1 DataBar Stacked Omnidir
+              - GS1 DataBar Stacked
+              - GS1 DataBar Truncated
+              - GS1-128
+              - MSI
+              - PharmaCode
+              - UPC-A Add-On 2
+              - UPC-A Add-On 5
+              - UPC-A
+              - UPC-E Add-On 2
+              - UPC-E Add-On 5
+              - UPC-E
+        - name: dark_on_light
+          in: query
+          description: Specify the barcode polarity.
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: barcode_height_min
+          in: query
+          description: Specify minimum barcode height.
+          required: false
+          schema:
+            type: integer
+            minimum: 8
+            default: -1
+        - name: barcode_width_min
+          in: query
+          description: Specify minimum barcode width.
+          required: false
+          schema:
+            type: integer
+            default: -1
+        - name: element_size_min
+          in: query
+          description: Specify minimum element size.
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0.6
+            maximum: 64
+            default: 2
+        - name: element_size_max
+          in: query
+          description: Specify maximum element size.
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 1
+            maximum: 256
+            default: 8
+        - name: min_code_length
+          in: query
+          description: Specify expected minimum code length.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 0
+            default: 0
+        - name: min_contrast
+          in: query
+          description: Specify minimum barcode contrast.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 0
+            default: 0
+        - name: min_identical_scanlines
+          in: query
+          description: Specify minimum number of identical scanlines.
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: orientation
+          in: query
+          description: Specify expected barcode orientation.
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: -180
+            maximum: 180
+            default: 0
+        - name: orientation_tolerance
+          in: query
+          description: Specify barcode orientation tolerance.
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 90
+            default: 90
+      requestBody:
+        $ref: '#/components/requestBodies/Image'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Barcode'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Barcode'
+      security:
+        - implicit:
+            - 'read:face'
+  /image/datacode:
+    post:
+      tags:
+        - image
+      summary: Detect datacodes
+      description: Detect and read datacodes (2D barcodes) found in the image.
+      operationId: datacode
+      parameters:
+        - name: code_type
+          in: query
+          description: Specify the barcode type.
+          required: true
+          schema:
+            type: string
+            enum:
+              - Aztec Code
+              - Data Matrix ECC 200
+              - PDF417
+              - QR Code
+              - Micro QR Code
+              - GS1 Aztec Code
+              - GS1 DataMatrix
+              - GS1 QR Code
+        - name: recognition
+          in: query
+          description: Specify the recognition parameters.
+          required: false
+          schema:
+            type: string
+            enum:
+              - standard
+              - enhanced
+              - maximum
+            default: standard
+        - name: model_type_aztec
+          in: query
+          description: Specify Aztec model type.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - compact
+                - rune
+                - full_range
+            default: 'compact,full_range'
+        - name: symbol_size_min_aztec
+          in: query
+          description: Specify minimum symbol size for Aztec model.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 11
+            maximum: 151
+            default: 11
+        - name: symbol_size_max_aztec
+          in: query
+          description: Specify maximum symbol size for Aztec model.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 11
+            maximum: 151
+            default: 151
+        - name: symbol_cols_min_ecc
+          in: query
+          description: Specify minimum symbol columns for ECC 200.
+          required: false
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 144
+            default: 10
+        - name: symbol_cols_max_ecc
+          in: query
+          description: Specify maximum symbol columns for ECC 200.
+          required: false
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 144
+            default: 144
+        - name: symbol_rows_min_ecc
+          in: query
+          description: Specify minimum symbol rows for ECC 200.
+          required: false
+          schema:
+            type: integer
+            minimum: 8
+            maximum: 144
+            default: 8
+        - name: symbol_rows_max_ecc
+          in: query
+          description: Specify maximum symbol rows for ECC 200.
+          required: false
+          schema:
+            type: integer
+            minimum: 8
+            maximum: 144
+            default: 144
+        - name: model_type_qr
+          in: query
+          description: Specify QR model type. 0 means both types 1 & 2.
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+              - 2
+            default: 0
+        - name: symbol_size_min_qr
+          in: query
+          description: Specify minimum symbol size for QR model.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 21
+            maximum: 177
+            default: 21
+        - name: symbol_size_max_qr
+          in: query
+          description: Specify maximum symbol size for QR model.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 21
+            maximum: 177
+            default: 177
+        - name: symbol_size_min_uqr
+          in: query
+          description: Specify minimum symbol size for micro QR models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 11
+            maximum: 17
+            default: 11
+        - name: symbol_size_max_uqr
+          in: query
+          description: Specify maximum symbol size for micro QR models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 11
+            maximum: 17
+            default: 17
+        - name: symbol_cols_min_pdf
+          in: query
+          description: Specify minimum symbol columns for PDF-417 models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 1
+            maximum: 30
+            default: 1
+        - name: symbol_cols_max_pdf
+          in: query
+          description: Specify maximum symbol columns PDF-417 models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 1
+            maximum: 30
+            default: 20
+        - name: symbol_rows_min_pdf
+          in: query
+          description: Specify minimum symbol rows for PDF-417 models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 3
+            maximum: 90
+            default: 5
+        - name: symbol_rows_max_pdf
+          in: query
+          description: Specify maximum symbol rows PDF-417 models.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 3
+            maximum: 90
+            default: 45
+        - name: contrast_min
+          in: query
+          description: Specify minimum datacode contrast.
+          required: false
+          schema:
+            type: number
+            format: integer
+            minimum: 1
+            default: 30
+        - name: contrast_tolerance
+          in: query
+          description: Specify datacode contrast tolerance.
+          required: false
+          schema:
+            type: string
+            enum:
+              - low
+              - high
+              - any
+        - name: dark_on_light
+          in: query
+          description: Specify the datacode polarity.
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: module_gap_min
+          in: query
+          description: Specify how big minimum gaps in the symbol are.
+          required: false
+          schema:
+            type: string
+            enum:
+              - 'no'
+              - big
+              - small
+            default: 'no'
+        - name: module_gap_max
+          in: query
+          description: Specify how big maximum gaps in the symbol are.
+          required: false
+          schema:
+            type: string
+            enum:
+              - 'no'
+              - big
+              - small
+        - name: slant_max
+          in: query
+          description: Specify maximum datacode slant from ideal right angle in degrees.
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 30
+            default: 10
+      requestBody:
+        $ref: '#/components/requestBodies/Image'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Barcode'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Barcode'
+      security:
+        - implicit:
+            - 'read:face'
+  /gallery:
+    get:
+      tags:
+        - face
+      summary: List galleries
+      description: Get the list of all galleries.
+      operationId: galleryList
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gallery'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gallery'
+      security:
+        - implicit:
+            - 'read:face'
+    post:
+      tags:
+        - face
+      summary: Create gallery
+      description: Create a new gallery where you can logically group several images.
+      operationId: galleryNew
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gallery'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Gallery'
+        description: Gallery for keeping images
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '201':
+          description: successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/gallery/{id}':
+    get:
+      tags:
+        - face
+      summary: View gallery
+      description: View a gallery by id.
+      operationId: galleryView
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - face
+      summary: Update gallery with form data
+      description: Update a gallery with form data.
+      operationId: galleryUpdateForm
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Updated gallery data
+                  type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    put:
+      tags:
+        - face
+      summary: Update gallery
+      description: Update a gallery.
+      operationId: galleryUpdate
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gallery'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Gallery'
+        description: Updated gallery data
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    delete:
+      tags:
+        - face
+      summary: Delete a gallery
+      description: Delete a gallery by id.
+      operationId: galleryRemove
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  /gallery/find:
+    get:
+      tags:
+        - face
+      summary: Find galleries by tags.
+      description: >-
+        Multiple tags can be provided with comma separated strings. Use
+        tag1,tag2,tag3 for testing.
+      operationId: galleryFind
+      parameters:
+        - name: tags
+          in: query
+          description: Tags to filter by
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gallery'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gallery'
+        '400':
+          description: Invalid tag supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/gallery/{id}/identify':
+    post:
+      tags:
+        - face
+      summary: Identify image
+      description: Identify an image in the gallery.
+      operationId: galleryIdentify
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/gallery/{id}/images':
+    get:
+      tags:
+        - face
+      summary: List gallery images
+      description: Get the list of images in a gallery.
+      operationId: imagesList
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - face
+      summary: Create image
+      description: Create a new image and enroll it into a gallery.
+      operationId: imagesNew
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Image'
+        description: Image data for enrollment
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '201':
+          description: successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+  '/gallery/{id}/images/{imageId}':
+    get:
+      tags:
+        - face
+      summary: View image
+      description: View an image in a gallery. Only a thumbnail is stored on the server.
+      operationId: imagesView
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image id to view
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    post:
+      tags:
+        - face
+      summary: Update image with form data
+      description: Update an image in a gallery with form data.
+      operationId: imagesUpdatePost
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image id to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/classifierImageUpdatePost'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    put:
+      tags:
+        - face
+      summary: Update image
+      description: Update an image in a gallery.
+      operationId: imagesUpdate
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image id to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Image'
+        description: Updated image data
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - implicit:
+            - 'write:face'
+            - 'read:face'
+    delete:
+      tags:
+        - face
+      summary: Delete an image
+      description: Delete an image by id.
+      operationId: imagesRemove
+      parameters:
+        - name: id
+          in: path
+          description: Gallery id to query
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          description: Image id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+servers:
+  - url: 'https://virtserver.swaggerhub.com/sa-mustafa/ucloud/v1'
+  - url: 'http://virtserver.swaggerhub.com/sa-mustafa/ucloud/v1'
+components:
+  requestBodies:
+    Image:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Image'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Image'
+      description: Image data for further processing
+      required: true
+    classifierImageUpdatePost:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              name:
+                description: Updated image data
+                type: string
+            required:
+              - name
+      required: true
+  securitySchemes:
+    implicit:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+          scopes:
+            'write:face': allows modifying resources
+            'read:face': allows reading resources
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+  schemas:
+    Barcode:
+      type: object
+      properties:
+        location:
+          type: string
+        data:
+          type: string
+          description: barcode data payload
+        type:
+          type: string
+      xml:
+        name: Barcode
+    Classifier:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tag:
+          type: string
+        use_color_info:
+          type: boolean
+          default: false
+        use_texture_info:
+          type: boolean
+          default: true
+        resize_options:
+          type: string
+          description: sample image resizing options
+          enum:
+            - none
+            - scale_by
+            - image_area
+          default: image_area
+        resize_value:
+          type: number
+          format: float
+          default: 0.5
+      xml:
+        name: Classifier
+    SampleImage:
+      type: object
+      properties:
+        id:
+          type: string
+        index:
+          type: string
+        name:
+          type: string
+      xml:
+        name: SampleImage
+    Matcher:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - NCC
+            - Anisotropic
+            - Isotropic
+            - Shape
+            - Deformable
+            - Feature
+            - Perspective
+          description: >
+            Specify the matcher type to use: * NCC: normalized cross correlation
+            matching * Anisotropic: shape model with orientation change and
+            independent scaling in column & row directions * Isotropic: shape
+            model with orientation change and equal scaling in column & row
+            directions * Shape: shape model matching with orientation change
+            only * Deformable: deformable shape model with orientation change
+            and independent scaling in column & row directions * Feature:
+            interest point matching for objects distorted by a projective view *
+            Perspective: deformable model matching for objects distorted by a
+            projective view
+        angle_start:
+          description: >-
+            smallest rotation of the pattern in degrees; applies to all matchers
+            except feature type
+          type: number
+          format: float
+          default: -45
+        angle_extent:
+          description: >-
+            extent of the rotation angle in degrees; applies to all matchers
+            except feature type
+          type: number
+          format: float
+          default: 90
+        angle_step:
+          description: >-
+            step length of the angles in degrees; applies to all matchers except
+            feature type
+          type: number
+          format: float
+          minimum: 0
+          maximum: 10
+        contrast:
+          description: >-
+            Specify the model contrast in the template image; 3 values may be
+            specified: lower threshold, upper threshold and minimum object size
+            for suppressing small artifacts; applies to all matchers except
+            NCC/feature types.
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: number
+            format: float
+        min_contrast:
+          description: >-
+            Specify the minimum object contrast in the search image; this value
+            should be chosen larger the noise level in the image; applies to all
+            matchers except NCC/feature types.
+          type: number
+          format: float
+        feature_type:
+          description: select feature type; applies only to feature matcher type.
+          type: string
+          enum:
+            - lepetit
+            - harris
+            - harris_binomial
+        feature_options:
+          description: select feature's options; applies only to feature matcher type.
+          type: object
+          properties:
+            depth:
+              description: >-
+                Deeper feature's descriptor can better discriminate object
+                points at the cost of more memory.
+              type: integer
+              default: 11
+            count:
+              description: >-
+                Using more descriptors increases the matching robustness at the
+                cost of runtime speed.
+              type: integer
+              minimum: 1
+              maximum: 150
+              default: 30
+            patch_size:
+              description: >-
+                length of a square created around a feature point for descriptor
+                extraction
+              type: integer
+              minimum: 15
+              maximum: 33
+              default: 17
+            perspective:
+              description: >-
+                enable perspective matching. When disabled, training time can be
+                greatly reduced while still able to recognize objects in
+                perspective.
+              type: boolean
+              default: true
+            rotation_min:
+              description: smallest rotation of the model in degrees
+              type: number
+              format: float
+              default: -180
+            rotation_max:
+              description: largest rotation of the model in degrees
+              type: number
+              format: float
+              default: 180
+            scale_min:
+              description: minimal scale of the model
+              type: number
+              format: float
+              default: 0.5
+            scale_max:
+              description: maximal scale of the model
+              type: number
+              format: float
+              default: 1.4
+        optimization:
+          description: >-
+            choose optimization applied to model generation; applies to all
+            matchers except NCC/feature types.
+          type: string
+          enum:
+            - auto
+            - none
+            - low
+            - medium
+            - high
+        pyramids:
+          description: >-
+            maximum number of pyramid levels; applies to all matchers except
+            feature type
+          type: integer
+        polarity:
+          description: >
+            Specify whether to enforce the model polarity; applies to all
+            matchers except feature type. * enforce: match the object accrdoing
+            to initial model's contrast level * ignore_color: matching should
+            ignore changes in the object color; it is not applicable to NCC type
+            * ignore_local: matching should ignore changes in the object
+            contrast; it is not applicable to NCC type * ignore_global: match
+            the object even if the whole image contrast is inverted. 
+          type: string
+          enum:
+            - enforce
+            - ignore_color
+            - ignore_local
+            - ignore_global
+          default: enforce
+        scale_col:
+          description: >-
+            Specify the model scale variation in column(X) direction; 3 values
+            may be specified: minimum scale, maximum scale and scale step change
+            for model creation; applies to anisotropic/deformable/perspective
+            types.
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: number
+            format: float
+        scale_row:
+          description: >-
+            Specify the model scale variation in row(Y) direction; 3 values may
+            be specified: minimum scale, maximum scale and scale step change for
+            model creation; applies to anisotropic/deformable/perspective types.
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: number
+            format: float
+        scale:
+          description: >-
+            Specify the model scale variation; 3 values may be specified:
+            minimum scale, maximum scale and scale step change for model
+            creation; applies to isotropic type only.
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: number
+            format: float
+      xml:
+        name: Matcher
+    ModelInstance:
+      type: object
+      properties:
+        angles:
+          description: >-
+            rotation angles of found instances of the model; applies to all
+            except deformable/descriptor/perspective matchers.
+          type: array
+          items:
+            type: number
+            format: float
+        cols:
+          description: >-
+            rows of found instances of the model; applies to all except
+            descriptor/perspective matchers.
+          type: array
+          items:
+            type: number
+            format: float
+        rows:
+          description: >-
+            columns of found instances of the model; applies to all except
+            descriptor/perspective matchers.
+          type: array
+          items:
+            type: number
+            format: float
+        scales:
+          description: scales of found instances; applies to isotropic matcher only.
+          type: array
+          items:
+            type: number
+            format: float
+        scales_row:
+          description: >-
+            scales of found instances in row direction; applies to anisotropic
+            matcher only.
+          type: array
+          items:
+            type: number
+            format: float
+        scales_col:
+          description: >-
+            scales of found instances in column direction; applies to
+            anisotropic matcher only.
+          type: array
+          items:
+            type: number
+            format: float
+        transforms:
+          description: >-
+            homography transforms between found instances and the model; applies
+            to descriptor & perspective matchers only.
+          type: array
+          items:
+            type: number
+            format: float
+        scores:
+          description: matching scores of found instances.
+          type: array
+          items:
+            type: number
+            format: float
+      xml:
+        name: ModelInstance
+    Gallery:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tag:
+          type: string
+        watchlist:
+          type: boolean
+          description: >-
+            Watchlist gallreies remain in memory for identification with
+            incoming images.
+          default: false
+      xml:
+        name: Gallery
+    Image:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tag:
+          type: string
+        source:
+          type: string
+          description: Image URL or content in base64
+        type:
+          description: Specify the image source type.
+          type: string
+          enum:
+            - url
+            - base64
+      xml:
+        name: Image
+    Location:
+      type: object
+      properties:
+        Left:
+          type: number
+          format: float
+        Top:
+          type: number
+          format: float
+        Height:
+          type: number
+          format: float
+        Width:
+          type: number
+          format: float
+      xml:
+        name: Location
+    Position:
+      type: object
+      properties:
+        X:
+          type: number
+          format: float
+        'Y':
+          type: number
+          format: float
+      xml:
+        name: Position
+    Size:
+      type: object
+      properties:
+        Height:
+          type: number
+          format: float
+        Width:
+          type: number
+          format: float
+      xml:
+        name: Size
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        type:
+          type: string

@@ -1,0 +1,3139 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "uCloud is a collection of image APIs.",
+    "version": "1.0.2",
+    "title": "uCloud API collection",
+    "contact": {
+      "email": "help@bps-eng.co.ir"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/sa-mustafa/ucloud/v1",
+  "tags": [
+    {
+      "name": "face",
+      "description": "Face detection and recognition",
+      "externalDocs": {
+        "description": "more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "classifier",
+      "description": "Access to image classification API",
+      "externalDocs": {
+        "description": "more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "image",
+      "description": "Access to image processing API",
+      "externalDocs": {
+        "description": "more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "matching",
+      "description": "Access to object matching API",
+      "externalDocs": {
+        "description": "more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "user",
+      "description": "Operations about users",
+      "externalDocs": {
+        "description": "Find out more about our users",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "security": [
+    {
+      "implicit": [
+        "read:face",
+        "write:face"
+      ]
+    }
+  ],
+  "paths": {
+    "/logo": {
+      "get": {
+        "summary": "Get logo",
+        "description": "Returns the logo image",
+        "produces": [
+          "image/*"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "Server heartbeat operation",
+        "description": "This operation shows how to override the global security defined above, as we want to open it up for all users.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/classifiers": {
+      "get": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "List classifiers",
+        "description": "Get the list of all classifiers.",
+        "operationId": "classifierList",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Classifier"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Create classifier",
+        "description": "Create a new classifier which identifies input images into known classes.",
+        "operationId": "classifierNew",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "description": "Classifier for identifying images",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Classifier"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "409": {
+            "description": "Input already exists",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/classifiers/{name}": {
+      "get": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "View classifier",
+        "description": "View a classifier by name.",
+        "operationId": "classifierView",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Classifier"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Update classifier with form data",
+        "description": "Update a classifier with form data.",
+        "operationId": "classifierUpdateForm",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "Updated classifier data",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Update classifier",
+        "description": "Update a classifier.",
+        "operationId": "classifierUpdate",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "Updated classifier data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Classifier"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Delete a classifier",
+        "description": "Delete a classifier by name.",
+        "operationId": "classifierRemove",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/classifiers/{name}/image": {
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Add image to classifier",
+        "description": "Add a new image to classifier. Classifier uses these images for training. Multiple images of the same object should be added for enhanced results.",
+        "operationId": "classifierImageNew",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for feature extraction",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          {
+            "name": "index",
+            "in": "query",
+            "description": "Sample image index. Use multiple images with the same index and name for robustness.",
+            "required": true,
+            "type": "number",
+            "format": "integer"
+          },
+          {
+            "name": "imageName",
+            "in": "query",
+            "description": "Sample image name",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/classifiers/{name}/image/{imageName}": {
+      "get": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "View image info",
+        "description": "View an image info in a classifier.",
+        "operationId": "classifierImageView",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to view",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/SampleImage"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Update image with form data",
+        "description": "Update an image in a classifier with form data.",
+        "operationId": "classifierImageUpdatePost",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Updated image data",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Update image info",
+        "description": "Update image info in a classifier.",
+        "operationId": "classifierImageUpdate",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Updated image data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SampleImage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Delete an image",
+        "description": "Delete an image by index.",
+        "operationId": "classifierImageRemove",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/classifiers/{name}/train": {
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Train a classifier",
+        "description": "Train classifier using sample images provided to the classifier.",
+        "operationId": "classifierTrain",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/classifiers/{name}/identify": {
+      "post": {
+        "tags": [
+          "classifier"
+        ],
+        "summary": "Identify image",
+        "description": "Identify an image by a trained classifier.",
+        "operationId": "classifierIdentify",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Classifier name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for identification",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/SampleImage"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/matchers": {
+      "get": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "List matchers",
+        "description": "Get the list of all matchers.",
+        "operationId": "matcherList",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Matcher"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "Create matcher",
+        "description": "Create a new matcher which can be used to find similar models in input images.",
+        "operationId": "matcherNew",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "description": "Matcher for finding models",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Matcher"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "409": {
+            "description": "Input already exists",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/matchers/{name}": {
+      "get": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "View matcher",
+        "description": "View a matcher by name.",
+        "operationId": "matcherView",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Matcher name to query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Matcher"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "Update matcher with form data",
+        "description": "Update a matcher with form data.",
+        "operationId": "matcherUpdateForm",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Matcher name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "Updated matcher data",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "Update matcher",
+        "description": "Update a matcher.",
+        "operationId": "matcherUpdate",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Matcher name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "Updated matcher data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Matcher"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "Delete a matcher",
+        "description": "Delete a matcher by name.",
+        "operationId": "matcherRemove",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Matcher name to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/matchers/{name}/find": {
+      "post": {
+        "tags": [
+          "matching"
+        ],
+        "summary": "Find model",
+        "description": "Find model instances in an image by the matcher.",
+        "operationId": "matcherFind",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Matcher name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for matching",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          {
+            "name": "min_score",
+            "in": "query",
+            "description": "Minimum match score",
+            "required": false,
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "format": "float"
+          },
+          {
+            "name": "matches_count",
+            "in": "query",
+            "description": "Maximum count of matches to return; 0 means all matches should be returned.",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "minimum": 0
+          },
+          {
+            "name": "max_overlap",
+            "in": "query",
+            "description": "Maximum overlap of the model instances.",
+            "required": false,
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "format": "float"
+          },
+          {
+            "name": "subpixel",
+            "in": "query",
+            "description": "Specify model localization accuracy.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "interpolation",
+              "least_squares",
+              "least_squares_high",
+              "least_squares_very_high"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModelInstance"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/image/barcode": {
+      "post": {
+        "tags": [
+          "image"
+        ],
+        "summary": "Detect barcodes",
+        "description": "Detect and read barcodes found in the image.",
+        "operationId": "barcode",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for further processing",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          {
+            "name": "code_type",
+            "in": "query",
+            "description": "Specify the barcode type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "auto",
+              "2/5 Industrial",
+              "2/5 Interleaved",
+              "Codabar",
+              "Code 128",
+              "Code 39",
+              "Code 93",
+              "EAN-13 Add-On 2",
+              "EAN-13 Add-On 5",
+              "EAN-13",
+              "EAN-8 Add-On 2",
+              "EAN-8 Add-On 5",
+              "EAN-8",
+              "GS1 DataBar Expanded Stacked",
+              "GS1 DataBar Expanded",
+              "GS1 DataBar Limited",
+              "GS1 DataBar Omnidir",
+              "GS1 DataBar Stacked Omnidir",
+              "GS1 DataBar Stacked",
+              "GS1 DataBar Truncated",
+              "GS1-128",
+              "MSI",
+              "PharmaCode",
+              "UPC-A Add-On 2",
+              "UPC-A Add-On 5",
+              "UPC-A",
+              "UPC-E Add-On 2",
+              "UPC-E Add-On 5",
+              "UPC-E"
+            ]
+          },
+          {
+            "name": "dark_on_light",
+            "in": "query",
+            "description": "Specify the barcode polarity.",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "barcode_height_min",
+            "in": "query",
+            "description": "Specify minimum barcode height.",
+            "required": false,
+            "type": "integer",
+            "default": -1,
+            "minimum": 8
+          },
+          {
+            "name": "barcode_width_min",
+            "in": "query",
+            "description": "Specify minimum barcode width.",
+            "required": false,
+            "type": "integer",
+            "default": -1
+          },
+          {
+            "name": "element_size_min",
+            "in": "query",
+            "description": "Specify minimum element size.",
+            "required": false,
+            "type": "number",
+            "default": 2,
+            "maximum": 64,
+            "minimum": 0.6,
+            "format": "float"
+          },
+          {
+            "name": "element_size_max",
+            "in": "query",
+            "description": "Specify maximum element size.",
+            "required": false,
+            "type": "number",
+            "default": 8,
+            "maximum": 256,
+            "minimum": 1,
+            "format": "float"
+          },
+          {
+            "name": "min_code_length",
+            "in": "query",
+            "description": "Specify expected minimum code length.",
+            "required": false,
+            "type": "number",
+            "default": 0,
+            "minimum": 0,
+            "format": "integer"
+          },
+          {
+            "name": "min_contrast",
+            "in": "query",
+            "description": "Specify minimum barcode contrast.",
+            "required": false,
+            "type": "number",
+            "default": 0,
+            "minimum": 0,
+            "format": "integer"
+          },
+          {
+            "name": "min_identical_scanlines",
+            "in": "query",
+            "description": "Specify minimum number of identical scanlines.",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          },
+          {
+            "name": "orientation",
+            "in": "query",
+            "description": "Specify expected barcode orientation.",
+            "required": false,
+            "type": "number",
+            "default": 0,
+            "maximum": 180,
+            "minimum": -180,
+            "format": "float"
+          },
+          {
+            "name": "orientation_tolerance",
+            "in": "query",
+            "description": "Specify barcode orientation tolerance.",
+            "required": false,
+            "type": "number",
+            "default": 90,
+            "maximum": 90,
+            "minimum": 0,
+            "format": "float"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Barcode"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/image/datacode": {
+      "post": {
+        "tags": [
+          "image"
+        ],
+        "summary": "Detect datacodes",
+        "description": "Detect and read datacodes (2D barcodes) found in the image.",
+        "operationId": "datacode",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for further processing",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          {
+            "name": "code_type",
+            "in": "query",
+            "description": "Specify the barcode type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Aztec Code",
+              "Data Matrix ECC 200",
+              "PDF417",
+              "QR Code",
+              "Micro QR Code",
+              "GS1 Aztec Code",
+              "GS1 DataMatrix",
+              "GS1 QR Code"
+            ]
+          },
+          {
+            "name": "recognition",
+            "in": "query",
+            "description": "Specify the recognition parameters.",
+            "required": false,
+            "type": "string",
+            "default": "standard",
+            "enum": [
+              "standard",
+              "enhanced",
+              "maximum"
+            ]
+          },
+          {
+            "name": "model_type_aztec",
+            "in": "query",
+            "description": "Specify Aztec model type.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "compact",
+                "rune",
+                "full_range"
+              ]
+            },
+            "collectionFormat": "multi",
+            "default": "compact,full_range"
+          },
+          {
+            "name": "symbol_size_min_aztec",
+            "in": "query",
+            "description": "Specify minimum symbol size for Aztec model.",
+            "required": false,
+            "type": "number",
+            "default": 11,
+            "maximum": 151,
+            "minimum": 11,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_size_max_aztec",
+            "in": "query",
+            "description": "Specify maximum symbol size for Aztec model.",
+            "required": false,
+            "type": "number",
+            "default": 151,
+            "maximum": 151,
+            "minimum": 11,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_cols_min_ecc",
+            "in": "query",
+            "description": "Specify minimum symbol columns for ECC 200.",
+            "required": false,
+            "type": "integer",
+            "default": 10,
+            "maximum": 144,
+            "minimum": 10
+          },
+          {
+            "name": "symbol_cols_max_ecc",
+            "in": "query",
+            "description": "Specify maximum symbol columns for ECC 200.",
+            "required": false,
+            "type": "integer",
+            "default": 144,
+            "maximum": 144,
+            "minimum": 10
+          },
+          {
+            "name": "symbol_rows_min_ecc",
+            "in": "query",
+            "description": "Specify minimum symbol rows for ECC 200.",
+            "required": false,
+            "type": "integer",
+            "default": 8,
+            "maximum": 144,
+            "minimum": 8
+          },
+          {
+            "name": "symbol_rows_max_ecc",
+            "in": "query",
+            "description": "Specify maximum symbol rows for ECC 200.",
+            "required": false,
+            "type": "integer",
+            "default": 144,
+            "maximum": 144,
+            "minimum": 8
+          },
+          {
+            "name": "model_type_qr",
+            "in": "query",
+            "description": "Specify QR model type. 0 means both types 1 & 2.",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          },
+          {
+            "name": "symbol_size_min_qr",
+            "in": "query",
+            "description": "Specify minimum symbol size for QR model.",
+            "required": false,
+            "type": "number",
+            "default": 21,
+            "maximum": 177,
+            "minimum": 21,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_size_max_qr",
+            "in": "query",
+            "description": "Specify maximum symbol size for QR model.",
+            "required": false,
+            "type": "number",
+            "default": 177,
+            "maximum": 177,
+            "minimum": 21,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_size_min_uqr",
+            "in": "query",
+            "description": "Specify minimum symbol size for micro QR models.",
+            "required": false,
+            "type": "number",
+            "default": 11,
+            "maximum": 17,
+            "minimum": 11,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_size_max_uqr",
+            "in": "query",
+            "description": "Specify maximum symbol size for micro QR models.",
+            "required": false,
+            "type": "number",
+            "default": 17,
+            "maximum": 17,
+            "minimum": 11,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_cols_min_pdf",
+            "in": "query",
+            "description": "Specify minimum symbol columns for PDF-417 models.",
+            "required": false,
+            "type": "number",
+            "default": 1,
+            "maximum": 30,
+            "minimum": 1,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_cols_max_pdf",
+            "in": "query",
+            "description": "Specify maximum symbol columns PDF-417 models.",
+            "required": false,
+            "type": "number",
+            "default": 20,
+            "maximum": 30,
+            "minimum": 1,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_rows_min_pdf",
+            "in": "query",
+            "description": "Specify minimum symbol rows for PDF-417 models.",
+            "required": false,
+            "type": "number",
+            "default": 5,
+            "maximum": 90,
+            "minimum": 3,
+            "format": "integer"
+          },
+          {
+            "name": "symbol_rows_max_pdf",
+            "in": "query",
+            "description": "Specify maximum symbol rows PDF-417 models.",
+            "required": false,
+            "type": "number",
+            "default": 45,
+            "maximum": 90,
+            "minimum": 3,
+            "format": "integer"
+          },
+          {
+            "name": "contrast_min",
+            "in": "query",
+            "description": "Specify minimum datacode contrast.",
+            "required": false,
+            "type": "number",
+            "default": 30,
+            "minimum": 1,
+            "format": "integer"
+          },
+          {
+            "name": "contrast_tolerance",
+            "in": "query",
+            "description": "Specify datacode contrast tolerance.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "low",
+              "high",
+              "any"
+            ]
+          },
+          {
+            "name": "dark_on_light",
+            "in": "query",
+            "description": "Specify the datacode polarity.",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "module_gap_min",
+            "in": "query",
+            "description": "Specify how big minimum gaps in the symbol are.",
+            "required": false,
+            "type": "string",
+            "default": "no",
+            "enum": [
+              "no",
+              "big",
+              "small"
+            ]
+          },
+          {
+            "name": "module_gap_max",
+            "in": "query",
+            "description": "Specify how big maximum gaps in the symbol are.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "no",
+              "big",
+              "small"
+            ]
+          },
+          {
+            "name": "slant_max",
+            "in": "query",
+            "description": "Specify maximum datacode slant from ideal right angle in degrees.",
+            "required": false,
+            "type": "number",
+            "default": 10,
+            "maximum": 30,
+            "minimum": 0,
+            "format": "float"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Barcode"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery": {
+      "get": {
+        "tags": [
+          "face"
+        ],
+        "summary": "List galleries",
+        "description": "Get the list of all galleries.",
+        "operationId": "galleryList",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Gallery"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Create gallery",
+        "description": "Create a new gallery where you can logically group several images.",
+        "operationId": "galleryNew",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "gallery",
+            "description": "Gallery for keeping images",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Gallery"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "409": {
+            "description": "Input already exists",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery/{name}": {
+      "get": {
+        "tags": [
+          "face"
+        ],
+        "summary": "View gallery",
+        "description": "View a gallery by name.",
+        "operationId": "galleryView",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Update gallery with form data",
+        "description": "Update a gallery with form data.",
+        "operationId": "galleryUpdateForm",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "formData",
+            "description": "Updated gallery data",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Update gallery",
+        "description": "Update a gallery.",
+        "operationId": "galleryUpdate",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "gallery",
+            "description": "Updated gallery data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Gallery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Delete a gallery",
+        "description": "Delete a gallery by name.",
+        "operationId": "galleryRemove",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery/find": {
+      "get": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Find galleries by names.",
+        "description": "Multiple names can be provided with comma separated strings. Use name1,name2,name3, for example.",
+        "operationId": "galleryFind",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "names",
+            "in": "query",
+            "description": "Names to filter by",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Gallery"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery/{name}/identify": {
+      "post": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Identify image",
+        "description": "Identify an image in the gallery.",
+        "operationId": "galleryIdentify",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "probe",
+            "description": "Probe image to search",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Image"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery/{name}/images": {
+      "get": {
+        "tags": [
+          "face"
+        ],
+        "summary": "List gallery images",
+        "description": "Get the list of images in a gallery.",
+        "operationId": "imagesList",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Image"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Create image",
+        "description": "Create a new image and enroll it into a gallery.",
+        "operationId": "imagesNew",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Image data for enrollment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "409": {
+            "description": "Input already exists",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      }
+    },
+    "/gallery/{name}/images/{imageName}": {
+      "get": {
+        "tags": [
+          "face"
+        ],
+        "summary": "View image",
+        "description": "View an image in a gallery. Only a thumbnail is stored on the server.",
+        "operationId": "imagesView",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to view",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Update image with form data",
+        "description": "Update an image in a gallery with form data.",
+        "operationId": "imagesUpdatePost",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Updated image data",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Update image",
+        "description": "Update an image in a gallery.",
+        "operationId": "imagesUpdate",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "image",
+            "description": "Updated image data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid input",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "implicit": [
+              "write:face",
+              "read:face"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "face"
+        ],
+        "summary": "Delete an image",
+        "description": "Delete an image by name.",
+        "operationId": "imagesRemove",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Gallery name to query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "imageName",
+            "in": "path",
+            "description": "Image name to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid name supplied",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "404": {
+            "description": "Name not found",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "implicit": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:face": "allows modifying resources",
+        "read:face": "allows reading resources"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Barcode": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "description": "barcode data payload"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Barcode"
+      }
+    },
+    "Classifier": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "unique id or name",
+          "maxLength": 128
+        },
+        "tag": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "use_color_info": {
+          "type": "boolean",
+          "default": false
+        },
+        "use_texture_info": {
+          "type": "boolean",
+          "default": true
+        },
+        "resize_options": {
+          "type": "string",
+          "description": "sample image resizing options",
+          "default": "image_area",
+          "enum": [
+            "none",
+            "scale_by",
+            "image_area"
+          ]
+        },
+        "resize_value": {
+          "type": "number",
+          "format": "float",
+          "default": 0.5
+        }
+      },
+      "xml": {
+        "name": "Classifier"
+      }
+    },
+    "SampleImage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "index": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "SampleImage"
+      }
+    },
+    "Matcher": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "unique id or name",
+          "maxLength": 128
+        },
+        "type": {
+          "type": "string",
+          "description": "Specify the matcher type to use: * NCC: normalized cross correlation matching * Anisotropic: shape model with orientation change and independent scaling in column & row directions * Isotropic: shape model with orientation change and equal scaling in column & row directions * Shape: shape model matching with orientation change only * Deformable: deformable shape model with orientation change and independent scaling in column & row directions * Feature: interest point matching for objects distorted by a projective view * Perspective: deformable model matching for objects distorted by a projective view\n",
+          "enum": [
+            "NCC",
+            "Anisotropic",
+            "Isotropic",
+            "Shape",
+            "Deformable",
+            "Feature",
+            "Perspective"
+          ]
+        },
+        "angle_start": {
+          "type": "number",
+          "format": "float",
+          "description": "smallest rotation of the pattern in degrees; applies to all matchers except feature type",
+          "default": -45
+        },
+        "angle_extent": {
+          "type": "number",
+          "format": "float",
+          "description": "extent of the rotation angle in degrees; applies to all matchers except feature type",
+          "default": 90
+        },
+        "angle_step": {
+          "type": "number",
+          "format": "float",
+          "description": "step length of the angles in degrees; applies to all matchers except feature type",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "contrast": {
+          "type": "array",
+          "description": "Specify the model contrast in the template image; 3 values may be specified: lower threshold, upper threshold and minimum object size for suppressing small artifacts; applies to all matchers except NCC/feature types.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxItems": 3,
+          "minItems": 1
+        },
+        "min_contrast": {
+          "type": "number",
+          "format": "float",
+          "description": "Specify the minimum object contrast in the search image; this value should be chosen larger the noise level in the image; applies to all matchers except NCC/feature types."
+        },
+        "feature_type": {
+          "type": "string",
+          "description": "select feature type; applies only to feature matcher type.",
+          "enum": [
+            "lepetit",
+            "harris",
+            "harris_binomial"
+          ]
+        },
+        "feature_options": {
+          "$ref": "#/definitions/Matcher_feature_options"
+        },
+        "optimization": {
+          "type": "string",
+          "description": "choose optimization applied to model generation; applies to all matchers except NCC/feature types.",
+          "enum": [
+            "auto",
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "pyramids": {
+          "type": "integer",
+          "description": "maximum number of pyramid levels; applies to all matchers except feature type"
+        },
+        "polarity": {
+          "type": "string",
+          "description": "Specify whether to enforce the model polarity; applies to all matchers except feature type. * enforce: match the object accrdoing to initial model's contrast level * ignore_color: matching should ignore changes in the object color; it is not applicable to NCC type * ignore_local: matching should ignore changes in the object contrast; it is not applicable to NCC type * ignore_global: match the object even if the whole image contrast is inverted. \n",
+          "default": "enforce",
+          "enum": [
+            "enforce",
+            "ignore_color",
+            "ignore_local",
+            "ignore_global"
+          ]
+        },
+        "scale_col": {
+          "type": "array",
+          "description": "Specify the model scale variation in column(X) direction; 3 values may be specified: minimum scale, maximum scale and scale step change for model creation; applies to anisotropic/deformable/perspective types.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxItems": 3,
+          "minItems": 1
+        },
+        "scale_row": {
+          "type": "array",
+          "description": "Specify the model scale variation in row(Y) direction; 3 values may be specified: minimum scale, maximum scale and scale step change for model creation; applies to anisotropic/deformable/perspective types.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxItems": 3,
+          "minItems": 1
+        },
+        "scale": {
+          "type": "array",
+          "description": "Specify the model scale variation in; 3 values may be specified: minimum scale, maximum scale and scale step change for model creation; applies to isotropic type only.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "maxItems": 3,
+          "minItems": 1
+        }
+      },
+      "xml": {
+        "name": "Matcher"
+      }
+    },
+    "ModelInstance": {
+      "type": "object",
+      "properties": {
+        "angles": {
+          "type": "array",
+          "description": "rotation angles of found instances of the model; applies to all except deformable/descriptor/perspective matchers.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "cols": {
+          "type": "array",
+          "description": "rows of found instances of the model; applies to all except descriptor/perspective matchers.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "description": "columns of found instances of the model; applies to all except descriptor/perspective matchers.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "scales": {
+          "type": "array",
+          "description": "scales of found instances; applies to isotropic matcher only.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "scales_row": {
+          "type": "array",
+          "description": "scales of found instances in row direction; applies to anisotropic matcher only.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "scales_col": {
+          "type": "array",
+          "description": "scales of found instances in column direction; applies to anisotropic matcher only.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "transforms": {
+          "type": "array",
+          "description": "homography transforms between found instances and the model; applies to descriptor & perspective matchers only.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "scores": {
+          "type": "array",
+          "description": "matching scores of found instances.",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "xml": {
+        "name": "ModelInstance"
+      }
+    },
+    "Gallery": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "unique id or name",
+          "maxLength": 128
+        },
+        "tag": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "watchlist": {
+          "type": "boolean",
+          "description": "Watchlist gallreies remain in memory for identification with incoming images.",
+          "default": false
+        }
+      },
+      "xml": {
+        "name": "Gallery"
+      }
+    },
+    "Image": {
+      "type": "object",
+      "required": [
+        "name",
+        "source"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "unique id or name",
+          "maxLength": 128
+        },
+        "tag": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "source": {
+          "type": "string",
+          "description": "Image URL or content in base64",
+          "maxLength": 1048576
+        },
+        "type": {
+          "type": "string",
+          "description": "Specify the image source type.",
+          "default": "base64",
+          "enum": [
+            "url",
+            "base64"
+          ]
+        }
+      },
+      "xml": {
+        "name": "Image"
+      }
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "Left": {
+          "type": "number",
+          "format": "float"
+        },
+        "Top": {
+          "type": "number",
+          "format": "float"
+        },
+        "Height": {
+          "type": "number",
+          "format": "float"
+        },
+        "Width": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "xml": {
+        "name": "Location"
+      }
+    },
+    "Position": {
+      "type": "object",
+      "properties": {
+        "X": {
+          "type": "number",
+          "format": "float"
+        },
+        "Y": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "xml": {
+        "name": "Position"
+      }
+    },
+    "Size": {
+      "type": "object",
+      "properties": {
+        "Height": {
+          "type": "number",
+          "format": "float"
+        },
+        "Width": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "xml": {
+        "name": "Size"
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "type": "string",
+          "description": "the object's identifier, it may be, e.g. the name for an image or a gallery."
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Matcher_feature_options": {
+      "type": "object",
+      "properties": {
+        "depth": {
+          "type": "integer",
+          "description": "Deeper feature's descriptor can better discriminate object points at the cost of more memory."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Using more descriptors increases the matching robustness at the cost of runtime speed.",
+          "minimum": 1,
+          "maximum": 150
+        },
+        "patch_size": {
+          "type": "integer",
+          "description": "length of a square created around a feature point for descriptor extraction",
+          "minimum": 15,
+          "maximum": 33
+        },
+        "perspective": {
+          "type": "boolean",
+          "description": "enable perspective matching. When disabled, training time can be greatly reduced while still able to recognize objects in perspective.",
+          "default": true
+        },
+        "rotation_min": {
+          "type": "number",
+          "format": "float",
+          "description": "smallest rotation of the model in degrees",
+          "default": -180
+        },
+        "rotation_max": {
+          "type": "number",
+          "format": "float",
+          "description": "largest rotation of the model in degrees",
+          "default": 180
+        },
+        "scale_min": {
+          "type": "number",
+          "format": "float",
+          "description": "minimal scale of the model",
+          "default": 0.5
+        },
+        "scale_max": {
+          "type": "number",
+          "format": "float",
+          "description": "maximal scale of the model",
+          "default": 1.4
+        }
+      },
+      "description": "select feature's options; applies only to feature matcher type."
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
